@@ -17,8 +17,7 @@ int Driver::parse(const std::string& f) {
     scan_begin();
     parser.set_debug_level(trace_parsing);
     int res = parser();
-
-    std::cout << program << std::endl;
+    program->run();
     scan_end();
     return res;
 }
@@ -28,7 +27,7 @@ void Driver::scan_begin() {
     if (file.empty () || file == "-") {
     } else {
         stream.open(file);
-        std::cout << file << std::endl;
+        //std::cout << file << std::endl;
         scanner.yyrestart(&stream);
     }
 }

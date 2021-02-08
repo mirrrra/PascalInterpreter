@@ -4,7 +4,7 @@ Program::Program(const std::list<Statement*>& statements)
         : statements_(statements) {}
 
 void Program::run() {
-    for (Statement* elem: statements_) {
-        elem->run();
+    for (auto it = statements_.rbegin(); it != statements_.rend(); it++) {
+        (*it)->run();
     }
 }

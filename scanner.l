@@ -67,6 +67,7 @@ str   ['][a-zA-Z_0-9 ]*[']
 "do"       return yy::parser::make_DO   (loc);
 "for"      return yy::parser::make_FOR   (loc);
 "to"       return yy::parser::make_TO   (loc);
+"downto"   return yy::parser::make_DOWNTO   (loc);
 "and"      return yy::parser::make_AND   (loc);
 "or"       return yy::parser::make_OR   (loc);
 "write"    return yy::parser::make_WRITE   (loc);

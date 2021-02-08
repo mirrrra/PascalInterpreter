@@ -92,6 +92,7 @@
     DO "do"
     FOR "for"
     TO "to"
+    DOWNTO "downto"
     WRITE "write"
     WRITELN "writeln"
     INT "int"
@@ -114,6 +115,7 @@
 %nterm <std::list<Expression*>> args
 %nterm <Expression*> arg
 %nterm <Expression*> expression
+%nterm <int> which_way
 
 //%printer { yyo << $$; } <*>;
 
@@ -183,9 +185,13 @@ while_statement:
     };
 
 for_statement:
-    "for" "identifier" ":=" expression "to" expression "do" statement {
-        $$ = new ForStatement(&driver, $2, $4, $6, $8);
+    "for" "identifier" ":=" expression which_way expression "do" statement {
+        $$ = new ForStatement(&driver, $2, $4, $6, $8, $5);
     };
+
+which_way:
+    "to" { $$ = 0; }
+    | "downto" { $$ = 1; };
 
 %left "and" "or";
 %left "<" ">" "=";
