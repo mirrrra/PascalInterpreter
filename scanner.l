@@ -23,9 +23,9 @@
 %}
 
 id    [a-zA-Z][a-zA-Z_0-9]*
-int   [0-9]+
+int   [+-]?[0-9]+
 blank [ \t\r]
-str   ['][a-zA-Z_0-9 ]*[']
+str   ['][a-zA-Z_0-9 <>=!+*\/-]*[']
 
 %{
   // Code run each time a pattern is matched.
@@ -42,6 +42,7 @@ str   ['][a-zA-Z_0-9 ]*[']
 {blank}+   loc.step ();
 \n+        loc.lines (yyleng); loc.step ();
 
+{str}      return yy::parser::make_STR(yytext, loc);
 "-"        return yy::parser::make_MINUS  (loc);
 "+"        return yy::parser::make_PLUS   (loc);
 "*"        return yy::parser::make_STAR   (loc);
@@ -70,12 +71,12 @@ str   ['][a-zA-Z_0-9 ]*[']
 "downto"   return yy::parser::make_DOWNTO   (loc);
 "and"      return yy::parser::make_AND   (loc);
 "or"       return yy::parser::make_OR   (loc);
+"not"      return yy::parser::make_NOT   (loc);
 "write"    return yy::parser::make_WRITE   (loc);
 "writeln"  return yy::parser::make_WRITELN   (loc);
 "integer"  return yy::parser::make_INT   (loc);
 
 {int}      return yy::parser::make_NUMBER(yytext, loc);
-{str}      return yy::parser::make_STR(yytext, loc);
 {id}       {
                 if (driver.location_debug) {
                     std::cerr << "ID found " << yytext << std::endl;

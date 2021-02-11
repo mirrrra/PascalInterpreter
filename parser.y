@@ -16,13 +16,15 @@
     class Expression;
     class NumExpression;
     class IntExpression;
-    class OpExpression;
+    class UnaryOpExpression;
+    class BinaryOpExpression;
     class StrExpression;
     class Statement;
     class Assignment;
     class ForStatement;
     class WhileStatement;
     class IfStatement;
+    class IfElseStatement;
     class WriteStatement;
 }
 
@@ -79,6 +81,7 @@
     EQ "="
     AND "and"
     OR "or"
+    NOT "not"
     COLON ":"
     SEMICOLON ";"
     PROGRAM "program"
@@ -176,7 +179,7 @@ arg:
 
 if_statement:
     "if" expression "then" statement "else" statement {
-        $$ = new IfStatement($2, $4, $6);
+        $$ = new IfElseStatement($2, $4, $6);
     };
 
 while_statement:
@@ -193,7 +196,7 @@ which_way:
     "to" { $$ = 0; }
     | "downto" { $$ = 1; };
 
-%left "and" "or";
+%left "and" "or" "not";
 %left "<" ">" "=";
 %left "+" "-";
 %left "*" "/";
@@ -201,15 +204,17 @@ which_way:
 expression:
     "number" {$$ = new IntExpression($1); }
     | "identifier" {$$ = new NumExpression(&driver, $1); }
-    | expression "*" expression {$$ = new OpExpression('*', $1, $3); }
-    | expression "/" expression {$$ = new OpExpression('/', $1, $3); }
-    | expression "+" expression {$$ = new OpExpression('+', $1, $3); }
-    | expression "-" expression {$$ = new OpExpression('-', $1, $3); }
-    | expression "<" expression {$$ = new OpExpression('<', $1, $3); }
-    | expression ">" expression {$$ = new OpExpression('>', $1, $3); }
-    | expression "=" expression {$$ = new OpExpression('=', $1, $3); }
-    | expression "and" expression {$$ = new OpExpression('&', $1, $3); }
-    | expression "or" expression {$$ = new OpExpression('|', $1, $3); }
+    | expression "*" expression {$$ = new BinaryOpExpression('*', $1, $3); }
+    | expression "/" expression {$$ = new BinaryOpExpression('/', $1, $3); }
+    | expression "+" expression {$$ = new BinaryOpExpression('+', $1, $3); }
+    | expression "-" expression {$$ = new BinaryOpExpression('-', $1, $3); }
+    | expression "<" expression {$$ = new BinaryOpExpression('<', $1, $3); }
+    | expression ">" expression {$$ = new BinaryOpExpression('>', $1, $3); }
+    | expression "=" expression {$$ = new BinaryOpExpression('=', $1, $3); }
+    | expression "and" expression {$$ = new BinaryOpExpression('&', $1, $3); }
+    | expression "or" expression {$$ = new BinaryOpExpression('|', $1, $3); }
+    | "-" expression {$$ = new UnaryOpExpression('-', $2); }
+    | "not" expression {$$ = new UnaryOpExpression('!', $2); }
     | "(" expression ")" {$$ = $2; };
 
 %%
