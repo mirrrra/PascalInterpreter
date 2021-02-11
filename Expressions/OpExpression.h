@@ -3,12 +3,21 @@
 #include "Expression.h"
 #include "../driver.hh"
 
-class OpExpression: public Expression {
+class BinaryOpExpression: public Expression {
 public:
-    OpExpression(char op, Expression* exp1, Expression* exp2);
+    BinaryOpExpression(char op, Expression* exp1, Expression* exp2);
     std::string eval() const override;
 private:
     char op_;
     Expression* exp1_;
     Expression* exp2_;
+};
+
+class UnaryOpExpression: public Expression {
+public:
+    UnaryOpExpression(char op, Expression* exp);
+    std::string eval() const override;
+private:
+    char op_;
+    Expression* exp_;
 };
